@@ -143,5 +143,5 @@ double Sleep_tx::compute_penalty()
 	So, the sleep time and energy does not matter
 */
 
+	return wakeup_delay;
 }
-
