@@ -8,6 +8,11 @@ McPAT: (M)ulti(c)ore (P)ower, (A)rea, and (T)iming
 Current version 1.3
 ==================================================
 
+Recent repository note:
+The Gem5 integration merge from upstream `Zhaoyu-Jin/mcpat` branch
+`mcpat_gem5` is documented in
+[docs/merge_zhaoyu_jin_mcpat_gem5.md](docs/merge_zhaoyu_jin_mcpat_gem5.md).
+
 * What McPAT is: 
 
 	--Architectural integrated power, area, and timing modeling framework, focuses on power and area modeling, with a target clock rate as a design constraint. 
@@ -222,7 +227,5 @@ If you have any comments, questions, or suggestions, please write to us:
 
 Sheng Li             
 Sheng.sli@gmail.com 
-
-
 
 
