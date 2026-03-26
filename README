@@ -13,6 +13,15 @@ The Gem5 integration merge from upstream `Zhaoyu-Jin/mcpat` branch
 `mcpat_gem5` is documented in
 [docs/merge_zhaoyu_jin_mcpat_gem5.md](docs/merge_zhaoyu_jin_mcpat_gem5.md).
 
+Additional integration notes:
+
+- Multi-source 2026-03-26 round:
+  [docs/merge_multi_source_round_2026_03_26.md](docs/merge_multi_source_round_2026_03_26.md)
+- Source-specific notes live under `docs/merge_*.md`, including:
+  `Ziheng-W/mcpat`, `Twashi1/mcpat`, `RY5228/mcpat-research`,
+  `JaimeRoelandts/McPat_Sniper`, `alexmanle/pypat`, and
+  `TtitiO/mcpat-customized`
+
 * What McPAT is: 
 
 	--Architectural integrated power, area, and timing modeling framework, focuses on power and area modeling, with a target clock rate as a design constraint. 
@@ -227,5 +236,4 @@ If you have any comments, questions, or suggestions, please write to us:
 
 Sheng Li             
 Sheng.sli@gmail.com 
-
 

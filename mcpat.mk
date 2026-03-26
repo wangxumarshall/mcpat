@@ -20,8 +20,16 @@ else
   #OPT = -O0 -DNTHREADS=$(NTHREADS)
 endif
 
+ifneq ($(CACHE),)
+  OPT += -DENABLE_MEMOIZATION
+  CXXFLAGS_CACHE = -std=c++17
+  LIBS += -llmdb
+else
+  CXXFLAGS_CACHE =
+endif
+
 #CXXFLAGS = -Wall -Wno-unknown-pragmas -Winline $(DBG) $(OPT) 
-CXXFLAGS = -Wno-unknown-pragmas $(DBG) $(OPT) 
+CXXFLAGS = -Wno-unknown-pragmas $(DBG) $(OPT) $(CXXFLAGS_CACHE)
 CXX = g++ -m32
 CC  = gcc -m32
 
@@ -54,6 +62,7 @@ SRCS  = \
   parameter.cc \
   processor.cc \
   router.cc \
+  results_db.cc \
   sharedcache.cc \
   subarray.cc \
   technology.cc \
@@ -78,5 +87,4 @@ obj_$(TAG)/%.o : %.cc
 
 clean:
 	-rm -f *.o $(TARGET)
-
 

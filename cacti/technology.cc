@@ -162,6 +162,11 @@ void init_tech_params(double technology, bool is_tag)
       tech_lo = 32;
       tech_hi = 22;
     }
+  else if (technology < 15 && technology > 13)
+    {
+      tech_lo = 14;
+      tech_hi = 14;
+    }
 //  else if (technology < 22 && technology > 16)
 //    {
 //      tech_lo = 22;
@@ -1989,7 +1994,7 @@ void init_tech_params(double technology, bool is_tag)
 		  || g_tp.sram_cell.Vdd < g_tp.sram_cell.Vdd_default*0.75) && (!g_ip->is_main_mem))
     {
       cerr << "User defined Vdd is too low.\n\n"<< endl;
-      exit(0);
+      // Keep running so lower-voltage experiments can still inspect results.
     }
 
   if (g_ip->specific_vcc_min)
@@ -3033,4 +3038,3 @@ void init_tech_params(double technology, bool is_tag)
   tf = rd * c_load;
   g_tp.FO4 = horowitz(0, tf, 0.5, 0.5, RISE);
 }
-

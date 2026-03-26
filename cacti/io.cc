@@ -44,6 +44,7 @@
 #include "nuca.h"
 #include "crossbar.h"
 #include "arbiter.h"
+#include "results_db.h"
 #include "version_cacti.h"
 //#include "highradix.h"
 
@@ -1414,9 +1415,9 @@ bool InputParameter::error_checking()
   }
 
   int C = cache_sz/nbanks;
-  if (C < 64)
+  if (C < 16)
   {
-    cerr << "Cache size must >=64" << endl;
+    cerr << "Cache size must >=16" << endl;
     return false;
   }
 
@@ -3402,7 +3403,26 @@ uca_org_t cacti_interface(InputParameter  * const local_interface)
   init_tech_params(g_ip->F_sz_um, false);
   Wire winit; // Do not delete this line. It initializes wires.
 
-  solve(&fin_res);
+  uca_org_t cached_res;
+#ifdef ENABLE_MEMOIZATION
+  ResultsDB& results_db = ResultsDB::getInstance();
+  InputParameter key = *g_ip;
+  bool found = results_db.get(key, cached_res);
+#else
+  bool found = false;
+#endif
+
+  if (found)
+  {
+    fin_res = cached_res;
+  }
+  else
+  {
+    solve(&fin_res);
+#ifdef ENABLE_MEMOIZATION
+    results_db.put(key, fin_res);
+#endif
+  }
 
   if (!g_ip->dvs_voltage.empty())
   {
