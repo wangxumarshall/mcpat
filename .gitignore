@@ -22,6 +22,10 @@
 *.a
 *.lib
 
+# Python cache
+__pycache__/
+*.pyc
+
 # Executables
 *.exe
 *.out
@@ -30,3 +34,6 @@
 # McPAT custom
 mcpat
 obj_opt/
+obj_dbg/
+McPAT_input/
+results/
