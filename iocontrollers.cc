@@ -175,6 +175,22 @@ void NIUController::computeEnergy(bool is_tdp)
 
 void NIUController::displayEnergy(uint32_t indent,int plevel,bool is_tdp)
 {
+#ifndef ORIGINAL_OUTPUT
+string indent_str(indent, ' ');
+	string indent_str_next(indent+2, ' ');
+	bool long_channel = XML->sys.longer_channel_device;
+	bool power_gating = XML->sys.power_gating;
+
+		cout << "NIU" <<
+    ( rt_power.readOp.dynamic*niup.clockRate
+    + power.readOp.gate_leakage 
+    + power_gating ? 
+        (long_channel ? power.readOp.power_gated_with_long_channel_leakage 
+                      : power.readOp.power_gated_leakage)
+      : (long_channel ? power.readOp.longer_channel_leakage                
+                      : power.readOp.leakage) 
+    ) << endl;
+#else
 	string indent_str(indent, ' ');
 	string indent_str_next(indent+2, ' ');
 	bool long_channel = XML->sys.longer_channel_device;
@@ -197,7 +213,7 @@ void NIUController::displayEnergy(uint32_t indent,int plevel,bool is_tdp)
 	{
 
 	}
-
+#endif
 }
 
 void NIUController::set_niu_param()
@@ -326,6 +342,22 @@ void PCIeController::computeEnergy(bool is_tdp)
 
 void PCIeController::displayEnergy(uint32_t indent,int plevel,bool is_tdp)
 {
+#ifndef ORIGINAL_OUTPUT
+string indent_str(indent, ' ');
+	string indent_str_next(indent+2, ' ');
+	bool long_channel = XML->sys.longer_channel_device;
+	bool power_gating = XML->sys.power_gating;
+
+		cout << "PCIe" <<
+    ( rt_power.readOp.dynamic*pciep.clockRate
+    + power.readOp.gate_leakage 
+    + power_gating ? 
+        (long_channel ? power.readOp.power_gated_with_long_channel_leakage 
+                      : power.readOp.power_gated_leakage)
+      : (long_channel ? power.readOp.longer_channel_leakage                
+                      : power.readOp.leakage) 
+    ) << endl;
+#else
 	string indent_str(indent, ' ');
 	string indent_str_next(indent+2, ' ');
 	bool long_channel = XML->sys.longer_channel_device;
@@ -348,7 +380,7 @@ void PCIeController::displayEnergy(uint32_t indent,int plevel,bool is_tdp)
 	{
 
 	}
-
+#endif
 }
 
 void PCIeController::set_pcie_param()
@@ -457,6 +489,26 @@ void FlashController::computeEnergy(bool is_tdp)
 
 void FlashController::displayEnergy(uint32_t indent,int plevel,bool is_tdp)
 {
+#ifndef ORIGINAL_OUTPUT
+string indent_str(indent, ' ');
+string indent_str_next(indent+2, ' ');
+bool long_channel = XML->sys.longer_channel_device;
+bool power_gating = XML->sys.power_gating;
+
+if (is_tdp)
+{
+  cout << "Flash_Controller:" <<
+  ( rt_power.readOp.dynamic
+  + power.readOp.gate_leakage 
+  + power_gating ? 
+      (long_channel ? power.readOp.power_gated_with_long_channel_leakage 
+                    : power.readOp.power_gated_leakage)
+    : (long_channel ? power.readOp.longer_channel_leakage                
+                    : power.readOp.leakage) 
+  ) << endl;
+}
+#else
+
 	string indent_str(indent, ' ');
 	string indent_str_next(indent+2, ' ');
 	bool long_channel = XML->sys.longer_channel_device;
@@ -479,7 +531,7 @@ void FlashController::displayEnergy(uint32_t indent,int plevel,bool is_tdp)
 	{
 
 	}
-
+#endif
 }
 
 void FlashController::set_fc_param()

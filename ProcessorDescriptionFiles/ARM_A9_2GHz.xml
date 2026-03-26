@@ -1,15 +1,16 @@
 <?xml version="1.0" ?>
 <component id="root" name="root">
 	<component id="system" name="system">
+
 		<!--McPAT will skip the components if number is set to 0 -->
 		<!--Duty cycles in this file are set according to "ARM MPcore
 			ARchitecture performance Enhancement" in MPF Japan 2008 -->
 		<param name="number_of_cores" value="2"/>
 		<param name="number_of_L1Directories" value="2"/>
 		<param name="number_of_L2Directories" value="0"/>
-		<param name="number_of_L2s" value="0"/> <!-- This number means how many L2 clusters in each cluster there can be multiple banks/ports -->
+		<param name="number_of_L2s" value="1"/> <!-- This number means how many L2 clusters in each cluster there can be multiple banks/ports -->
 		<param name="Private_L2" value="0"/><!--1 Private, 0 shared/coherent -->
-		<param name="number_of_L3s" value="0"/> <!-- This number means how many L3 clusters -->
+		<param name="number_of_L3s" value="1"/> <!-- This number means how many L3 clusters -->
 		<param name="number_of_NoCs" value="1"/>
 		<param name="homogeneous_cores" value="1"/><!--1 means homo -->
 		<param name="homogeneous_L2s" value="1"/>
@@ -437,6 +438,16 @@
 			the average power per fc or per channel. This is sufficient for most application -->  			
 		</component>
 <!--**********************************************************************-->
+              <!-- CIM  -->
+        <component id="system.CIM_SRAM" name="CIM_SRAM">
+            <param name="area" value="100"/>
+            <param name="static" value="123"/>
+            <param name="switch" value="1"/>
+            <stat name="frequency" value="1"/>
+            <stat name="activation_factor" value="1"/>
+            <stat name="switch_count" value="1"/>
+            <stat name="interval" value="1"/>
+        </component>
 
 		</component>
 </component>

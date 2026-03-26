@@ -45,6 +45,9 @@
 #include "sharedcache.h"
 #include "noc.h"
 #include "iocontrollers.h"
+#include "custom_block.h"
+#include <fstream> 
+
 
 class Processor : public Component
 {
@@ -60,6 +63,7 @@ class Processor : public Component
     NIUController    * niu;
     PCIeController   * pcie;
     FlashController  * flashcontroller;
+    CustomBlock CIM_SRAM{"CIM_SRAM",1,1};
     InputParameter interface_ip;
     ProcParam procdynp;
     //wire	globalInterconnect;
@@ -67,12 +71,21 @@ class Processor : public Component
     Component core, l2, l3, l1dir, l2dir, noc, mcs, cc, nius, pcies,flashcontrollers;
     int  numCore, numL2, numL3, numNOC, numL1Dir, numL2Dir;
     Processor(ParseXML *XML_interface);
-    void compute();
+    ~Processor();
     void set_proc_param();
+    // The following are interface for users:
     void displayEnergy(uint32_t indent = 0,int plevel = 100, bool is_tdp=true);
     void displayDeviceType(int device_type_, uint32_t indent = 0);
     void displayInterconnectType(int interconnect_type_, uint32_t indent = 0);
-    ~Processor();
+    void initialize();    // Initialize phase. An optimization is done via design space exploration.
+    void compute(ParseXML *fresh_XML = nullptr);       // Compute phase. Runtime power is computed.
+    void refresh_param(ParseXML *fresh_XML); // Refresh statistics for power computation. For coding simplicity, all parameters are refreshed.
+    void dump_name(ostream &out);
+    void dump_area(ostream &out);
+    void dump_stats(int plevel, ostream &out);
+    void clear_power();   // clear power in previous rounds
 };
+
+
 
 #endif /* PROCESSOR_H_ */

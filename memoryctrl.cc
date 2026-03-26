@@ -620,6 +620,57 @@ void MemoryController::computeEnergy(bool is_tdp)
 
 void MemoryController::displayEnergy(uint32_t indent,int plevel,bool is_tdp)
 {
+#ifndef ORIGINAL_OUTPUT
+
+string indent_str(indent, ' ');
+string indent_str_next(indent+2, ' ');
+bool long_channel = XML->sys.longer_channel_device;
+bool power_gating = XML->sys.power_gating;
+  cout << "Memory_Controller" <<
+        ( rt_power.readOp.dynamic/mcp.executionTime 
+        + power.readOp.gate_leakage 
+        + power_gating ? 
+            (long_channel ? power.readOp.power_gated_with_long_channel_leakage 
+                          : power.readOp.power_gated_leakage)
+          : (long_channel ? power.readOp.longer_channel_leakage                
+                          : power.readOp.leakage) 
+        ) << endl;
+  cout << indent_str << "Front_End_Engine" <<
+        ( frontend->rt_power.readOp.dynamic/mcp.executionTime 
+        + frontend->power.readOp.gate_leakage 
+        + power_gating ? 
+            (long_channel ? frontend->power.readOp.power_gated_with_long_channel_leakage 
+                          : frontend->power.readOp.power_gated_leakage)
+          : (long_channel ? frontend->power.readOp.longer_channel_leakage                
+                          : frontend->power.readOp.leakage) 
+        ) << endl;
+  if (plevel >2){
+    frontend->displayEnergy(indent+4,is_tdp);
+  }
+  cout << indent_str << "Transaction_Engine:" <<
+  ( transecEngine->rt_power.readOp.dynamic/mcp.executionTime 
+  + transecEngine->power.readOp.gate_leakage 
+  + power_gating ? 
+      (long_channel ? transecEngine->power.readOp.power_gated_with_long_channel_leakage 
+                    : transecEngine->power.readOp.power_gated_leakage)
+    : (long_channel ? transecEngine->power.readOp.longer_channel_leakage                
+                    : transecEngine->power.readOp.leakage) 
+  ) << endl;
+  if (mcp.type==0 || (mcp.type==1&&mcp.withPHY))
+  {
+    cout << indent_str << "PHY:" <<
+    ( PHY->rt_power.readOp.dynamic/mcp.executionTime 
+    + PHY->power.readOp.gate_leakage 
+    + power_gating ? 
+        (long_channel ? PHY->power.readOp.power_gated_with_long_channel_leakage 
+                      : PHY->power.readOp.power_gated_leakage)
+      : (long_channel ? PHY->power.readOp.longer_channel_leakage                
+                      : PHY->power.readOp.leakage) 
+    ) << endl;
+  }
+
+#else
+
 	string indent_str(indent, ' ');
 	string indent_str_next(indent+2, ' ');
 	bool long_channel = XML->sys.longer_channel_device;
@@ -683,7 +734,7 @@ void MemoryController::displayEnergy(uint32_t indent,int plevel,bool is_tdp)
 		cout << indent_str_next << "Gate Leakage = " << power.readOp.gate_leakage << " W" << endl;
 		cout<<endl;
 	}
-
+#endif
 }
 
 void MemoryController::set_mc_param()

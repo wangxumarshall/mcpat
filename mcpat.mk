@@ -16,7 +16,7 @@ ifeq ($(TAG),dbg)
   OPT = -ggdb -g -O0 -DNTHREADS=1 -Icacti
 else
   DBG = 
-  OPT = -O3 -msse2 -mfpmath=sse -DNTHREADS=$(NTHREADS) -Icacti
+  OPT = -O0 -msse2 -mfpmath=sse -DNTHREADS=$(NTHREADS) -Icacti
   #OPT = -O0 -DNTHREADS=$(NTHREADS)
 endif
 
