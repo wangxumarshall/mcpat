@@ -7,7 +7,7 @@ from typing import Dict, Optional
 
 import h5py
 
-from .profiles import normalize_gem5_config
+from .profiles import normalize_gem5_config, normalize_gem5_stats
 from .templates import default_template_path
 
 
@@ -225,6 +225,7 @@ def run_conversion(
     stats = read_stats_file(stats_file)
     raw_config = read_config_file(config_file)
     config, selected_profile = normalize_gem5_config(raw_config, template_profile)
+    stats = normalize_gem5_stats(stats, config, selected_profile)
     template_tree = load_template(template, selected_profile)
     dump_mcpat_out(stats, config, template_tree, outfile)
     return selected_profile

@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, Tuple
 
+from .arm64_kunpeng920 import normalize_kunpeng920_config, normalize_kunpeng920_stats
 from .templates import canonical_template_profile_name
 
 
@@ -68,5 +69,18 @@ def normalize_gem5_config(
     )
 
     normalized["profile"] = load_profile(selected_profile)
+    if selected_profile == "arm64-kunpeng920":
+        normalized = normalize_kunpeng920_config(normalized, normalized["profile"])
     normalized["selected_template_profile"] = selected_profile
     return normalized, selected_profile
+
+
+def normalize_gem5_stats(
+    stats: Dict[int, Dict[str, str]],
+    config: Dict[str, Any],
+    template_profile: str,
+) -> Dict[int, Dict[str, str]]:
+    canonical = canonical_template_profile_name(template_profile)
+    if canonical == "arm64-kunpeng920":
+        return normalize_kunpeng920_stats(stats, config)
+    return stats
