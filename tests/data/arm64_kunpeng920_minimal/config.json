@@ -1,0 +1,14 @@
+{
+  "system": {
+    "isa": "ArmISA",
+    "processor": {
+      "o3": {
+        "0": {
+          "core": {
+            "numThreads": 1
+          }
+        }
+      }
+    }
+  }
+}

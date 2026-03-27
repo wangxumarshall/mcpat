@@ -1,0 +1,2 @@
+simTicks 1000000
+---------- End Simulation Statistics ----------
