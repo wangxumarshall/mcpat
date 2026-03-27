@@ -28,6 +28,13 @@ def main() -> None:
         help="Optional path for the generated McPAT XML. Defaults to <target_dir>/conv.xml.",
     )
     parser.add_argument(
+        "--template-profile",
+        type=str,
+        default="auto",
+        help="McPAT template profile to use when --template is omitted. "
+        "Supported: auto, x86, arm64-kunpeng920.",
+    )
+    parser.add_argument(
         "--print-level",
         type=int,
         default=1,
@@ -51,6 +58,7 @@ def main() -> None:
         target_dir=args.target_dir,
         template=args.template,
         outfile=args.outfile,
+        template_profile=args.template_profile,
         print_level=args.print_level,
         opt_for_clk=args.opt_for_clk,
         mcpat_binary=args.mcpat_binary,

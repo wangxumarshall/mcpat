@@ -7,6 +7,7 @@ from typing import Dict, Optional
 
 import h5py
 
+from .profiles import normalize_gem5_config
 from .templates import default_template_path
 
 
@@ -39,11 +40,13 @@ def parse_template(source: Path) -> ET.ElementTree:
     )
 
 
-def load_template(template_file: Optional[Path]) -> ET.ElementTree:
+def load_template(
+    template_file: Optional[Path], template_profile: str = "x86"
+) -> ET.ElementTree:
     if template_file is not None:
         return parse_template(template_file)
 
-    candidate = default_template_path()
+    candidate = default_template_path(template_profile)
     if not candidate.exists():
         raise FileNotFoundError(
             f"Default template not found at {candidate}. Pass --template explicitly."
@@ -131,9 +134,30 @@ def safe_eval(expression: str) -> object:
     return eval(expression, SAFE_EVAL_GLOBALS, SAFE_EVAL_LOCALS)
 
 
+def split_top_level_commas(expression: str) -> list[str]:
+    parts = []
+    depth = 0
+    current = []
+
+    for char in expression:
+        if char == "," and depth == 0:
+            parts.append("".join(current).strip())
+            current = []
+            continue
+        if char == "(":
+            depth += 1
+        elif char == ")" and depth > 0:
+            depth -= 1
+        current.append(char)
+
+    tail = "".join(current).strip()
+    if tail:
+        parts.append(tail)
+    return parts
+
+
 def eval_csv_expression(expression: str) -> str:
-    expression = expression.strip("()")
-    pieces = [piece.strip() for piece in expression.split(",")]
+    pieces = split_top_level_commas(expression)
     return ",".join(str(safe_eval(piece)) for piece in pieces)
 
 
@@ -143,16 +167,20 @@ def substitute_config_expression(value: str, config: Dict[str, object]) -> str:
         rewritten = rewritten.replace(
             f"config.{match}", str(get_conf_value(match, config))
         )
-    if "," in rewritten:
+    if len(split_top_level_commas(rewritten)) > 1:
         return eval_csv_expression(rewritten)
     return str(safe_eval(rewritten.replace("[", "").replace("]", "")))
 
 
-def substitute_stat_expression(value: str, stats: Dict[int, Dict[str, str]]) -> str:
+def substitute_stat_expression(
+    value: str, stats: Dict[int, Dict[str, str]], config: Dict[str, object]
+) -> str:
     rewritten = value
     for match in STAT_PATTERN.findall(value):
         rewritten = rewritten.replace(f"stats.{match}", stats[0].get(match, "0.0"))
     try:
+        if "config" in rewritten:
+            rewritten = substitute_config_expression(rewritten, config)
         return str(safe_eval(rewritten))
     except ZeroDivisionError:
         return "0"
@@ -180,7 +208,7 @@ def dump_mcpat_out(
     for stat in root.iter("stat"):
         value = stat.attrib["value"]
         if "stats" in value:
-            stat.attrib["value"] = substitute_stat_expression(value, stats)
+            stat.attrib["value"] = substitute_stat_expression(value, stats, config)
 
     normalize_special_tags(template_mcpat)
     outfile.parent.mkdir(parents=True, exist_ok=True)
@@ -192,11 +220,14 @@ def run_conversion(
     config_file: Path,
     outfile: Path,
     template: Optional[Path] = None,
-) -> None:
+    template_profile: str = "auto",
+) -> str:
     stats = read_stats_file(stats_file)
-    config = read_config_file(config_file)
-    template_tree = load_template(template)
+    raw_config = read_config_file(config_file)
+    config, selected_profile = normalize_gem5_config(raw_config, template_profile)
+    template_tree = load_template(template, selected_profile)
     dump_mcpat_out(stats, config, template_tree, outfile)
+    return selected_profile
 
 
 def main() -> None:
@@ -207,6 +238,13 @@ def main() -> None:
     parser.add_argument("config_file", type=Path, help="Path to gem5 config.json.")
     parser.add_argument(
         "-t", "--template", type=Path, default=None, help="Optional McPAT template XML."
+    )
+    parser.add_argument(
+        "--template-profile",
+        type=str,
+        default="auto",
+        help="McPAT template profile to use when --template is omitted. "
+        "Supported: auto, x86, arm64-kunpeng920.",
     )
     parser.add_argument(
         "-o",
@@ -221,6 +259,7 @@ def main() -> None:
         config_file=args.config_file,
         outfile=args.outfile,
         template=args.template,
+        template_profile=args.template_profile,
     )
 
 

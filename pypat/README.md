@@ -28,6 +28,14 @@ python3 -m pypat /path/to/m5out \
   --opt-for-clk 0
 ```
 
+ARM64 / Kunpeng920-like template selection:
+
+```bash
+python3 -m pypat /path/to/m5out \
+  --template-profile arm64-kunpeng920 \
+  --outfile /path/to/m5out/conv.xml
+```
+
 Dependencies:
 
 - Python 3
@@ -36,3 +44,9 @@ Dependencies:
 The default template path is the repository's existing
 `gem5_mcpat_parser/template_x86.xml`, so this wrapper and the older
 `run_mcpat.sh` flow can share the same template base.
+
+Current limitation:
+
+- ARM64/Kunpeng920-like XML generation is wired up, but this local 2015 McPAT
+  fork can still reject ARM-like cache/core configurations at execution time.
+  The wrapper now surfaces the McPAT log excerpt so the failure is diagnosable.
