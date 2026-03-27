@@ -17,6 +17,8 @@ Additional integration notes:
 
 - Multi-source 2026-03-26 round:
   [docs/merge_multi_source_round_2026_03_26.md](docs/merge_multi_source_round_2026_03_26.md)
+- Build portability update:
+  [docs/build_portability_arm64_darwin_linux.md](docs/build_portability_arm64_darwin_linux.md)
 - Source-specific notes live under `docs/merge_*.md`, including:
   `Ziheng-W/mcpat`, `Twashi1/mcpat`, `RY5228/mcpat-research`,
   `JaimeRoelandts/McPat_Sniper`, `alexmanle/pypat`, and
@@ -236,4 +238,3 @@ If you have any comments, questions, or suggestions, please write to us:
 
 Sheng Li             
 Sheng.sli@gmail.com 
-

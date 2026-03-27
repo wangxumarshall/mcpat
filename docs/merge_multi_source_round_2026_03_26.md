@@ -17,6 +17,11 @@ merging every branch. Some repositories were close McPAT forks and could be
 merged or hand-ported directly; others were tool wrappers that would have
 duplicated this repository's source tree if imported verbatim.
 
+Historical note:
+The build limitation mentioned later in this document was resolved by the
+follow-up portability patch documented in
+[docs/build_portability_arm64_darwin_linux.md](./build_portability_arm64_darwin_linux.md).
+
 ## Current Source Map
 
 The main execution path of this repository is:

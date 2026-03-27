@@ -40,10 +40,10 @@ unsigned int MIN_BANKSIZE=65536;
 #define LATCH_DELAY 28e-12 /* latch delay in s (later should use FO4 TODO) */
 #define CONTR_2_BANK_LAT 0
 
-int cont_stats[2 /*l2 or l3*/][5/* cores */][ROUTER_TYPES][7 /*banks*/][8 /* cycle time */];
+int cont_stats[2 /*l2 or l3*/][5/* cores */][ROUTER_TYPES][8 /*banks*/][8 /* cycle time */];
 
   Nuca::Nuca(
-      TechnologyParameter::DeviceType *dt = &(g_tp.peri_global)
+      TechnologyParameter::DeviceType *dt
       ):deviceType(dt)
 {
   init_cont();
@@ -83,7 +83,7 @@ Nuca::print_cont_stats()
     for(int j=2; j<5; j++) {
       for(int k=0; k<ROUTER_TYPES; k++) {
         for(int l=0;l<7; l++) {
-          for(int m=0;l<7; l++) {
+          for(int m=0; m<8; m++) {
             cout << cont_stats[i][j][k][l][m] << " ";
           }
           cout << endl;
@@ -608,4 +608,3 @@ Nuca::calculate_nuca_area (nuca_org_t *nuca)
         * nuca->router->flit_size +
         nuca->bank_pda.area.w);
 }
-

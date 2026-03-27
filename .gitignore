@@ -37,3 +37,8 @@ obj_opt/
 obj_dbg/
 McPAT_input/
 results/
+
+# Standalone CACTI build outputs
+cacti/cacti
+cacti/obj_opt/
+cacti/obj_dbg/
